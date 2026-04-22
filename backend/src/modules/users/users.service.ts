@@ -33,4 +33,11 @@ export class UsersService {
 
     return this.userRepository.save(newUser);
   }
+
+  async findUserByEmail(userEmail: string): Promise<UserEntity | null> {
+    return this.userRepository.findOne({
+      where: { userEmail },
+      select: ['userId', 'userEmail', 'userPassword', 'userRole', 'userName'],
+    });
+  }
 }
