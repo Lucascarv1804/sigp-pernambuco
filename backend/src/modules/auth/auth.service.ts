@@ -13,7 +13,7 @@ export class AuthService {
   async login(userEmail: string, userPasswordRaw: string) {
     const user = await this.usersService.findUserByEmail(userEmail);
 
-    if (!user) {
+    if (!user || !user.userPassword) {
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
