@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15
+    container_name: gestao_db
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      POSTGRES_DB: gestao_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: ./backend
+    container_name: gestao_api
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://dev_user:dev_password@database:5432/gestao_db
+      JWT_SECRET: sua_chave_secreta_aqui
+    depends_on:
+      - database
+
+  frontend:
+    build: ./frontend
+    container_name: gestao_web
+    ports:
+      - "3001:3001"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3000
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
